@@ -3,3 +3,8 @@
 # 订阅时关闭“策略偏好”和“资源解析器”，保留每条规则的出口。
 # 农业银行：保留原配置的精确主机阻断。
 host, msmp.abchina.com.cn, reject
+
+# 同花顺：行情和资讯域名显式直连。
+host-suffix, 123ths.com, direct
+host-suffix, 10jqka.com.cn, direct
+host-suffix, hexin.cn, direct
