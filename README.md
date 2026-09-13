@@ -2,7 +2,34 @@
 
 Quantumult X 完整配置：国内直连、广告拦截、国外统一代理。保留“代理出口 / 自动选择”两个策略组，手动模式复用 Quan 内置的 proxy 节点选择。
 
-## 配置下载
+## 已在使用：只更新规则，保留证书和节点
+
+**日常增删域名规则不需要重新下载完整配置，也不需要重新生成证书。**
+
+[一键添加自定义修正订阅](https://quantumult.app/x/open-app/add-resource?remote-resource=%7B%22filter_remote%22%3A%5B%22https%3A%2F%2Fraw.githubusercontent.com%2Feasybrad%2Fquantumult-config%2Fmain%2Fcustom.list%2C%20tag%3D%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%AE%E6%AD%A3%2C%20inserted-resource%3Dtrue%2C%20update-interval%3D3600%2C%20opt-parser%3Dfalse%2C%20enabled%3Dtrue%22%5D%7D)
+
+此链接使用 Quantumult X 官方 `add-resource` 接口，仅添加一个 `filter_remote` 资源，不修改设备上的 MITM 证书、节点订阅、DNS 或策略组。首次添加一次即可；不要反复点击制造重复资源。
+
+如果点击后没有唤起 Quan，在“资源－分流”中手动添加：
+
+| 选项 | 设置 |
+| --- | --- |
+| 资源标签 | 自定义修正 |
+| 资源路径 | https://raw.githubusercontent.com/easybrad/quantumult-config/main/custom.list |
+| 插入资源 | 开启，使修正规则优先于本地普通规则 |
+| 自动更新 | 1 小时 |
+| 策略偏好 | 关闭，保留每条规则自己的 direct / reject / 代理策略 |
+| 资源解析器 | 关闭，文件已是 Quantumult X 格式 |
+
+`custom.list` 当前保留原配置中的 `host, msmp.abchina.com.cn, reject`。后续此类阻断、放行、代理例外在这个列表维护。更新列表后，可以在 Quan 手动更新“自定义修正”立即拉取，或等待自动更新间隔。
+
+原有广告、国内、国外等订阅继续独立更新。若旧配置本地还保留同一条农行阻断，暂时重复不影响这条规则的结果；自定义修正以插入资源优先应用。
+
+完整模板仅用于首次初始化。已经安装并信任的证书可以继续用；如果此前覆盖模板丢失证书配置，可以从自己的旧备份恢复原 `[mitm]` 内容，无需为规则更新重新生成证书。证书私钥和节点订阅密钥留在设备上，不放进公开仓库。
+
+策略组、DNS、节点及证书的结构性变更仍需单独操作；远程分流列表只负责规则，不会修改这些设置。
+
+## 首次初始化配置下载
 
 [QuantumultX.conf 原始配置链接](https://raw.githubusercontent.com/easybrad/quantumult-config/main/QuantumultX.conf)
 
@@ -12,7 +39,7 @@ https://raw.githubusercontent.com/easybrad/quantumult-config/main/QuantumultX.co
 
 这是完整配置，请通过 Quantumult X 的“配置文件 → 下载”入口使用，不要添加到“资源－分流”。
 
-## 首次使用
+## 首次初始化步骤
 
 1. 备份当前配置和个人节点订阅地址。
 2. 在 Quantumult X 设置的“配置文件 → 下载”中粘贴上面的原始配置链接，下载并应用。界面名称可能随版本变化。
@@ -45,10 +72,11 @@ https://raw.githubusercontent.com/easybrad/quantumult-config/main/QuantumultX.co
 
 ## 分流组合
 
-本地手动规则用于个人例外。远程资源按配置中的顺序排列：
+自定义例外由远程 custom.list 管理。该资源作为插入资源优先应用；其他远程资源按配置中的顺序排列：
 
 | 顺序 | 规则资源 | 出口 |
 | --- | --- | --- |
+| 优先 | custom.list（自定义修正） | 按条目策略 |
 | 1 | Lan | direct |
 | 2 | OpenAI | 代理出口 |
 | 3 | Direct（去广告放行） | direct |
@@ -67,10 +95,11 @@ Direct 按上游说明置于广告列表之前。Apple 直连是本模板的默�
 
 ## 自动更新
 
-- 8 个远程规则资源均设置 `update-interval=86400`，即 24 小时更新间隔；实际更新依赖 Quantumult X 的运行调度及资源地址可达。
+- 自定义修正资源设置 `update-interval=3600`，即 1 小时更新间隔。
+- 其余 8 个远程规则资源均设置 `update-interval=86400`，即 24 小时更新间隔；实际更新依赖 Quantumult X 的运行调度及资源地址可达。
 - 节点订阅更新由用户在设备上自行配置。
 - “自动选择”在活跃时按 600 秒间隔执行延迟测试，容差 50 毫秒；测试网址延迟不等于下载速度或流媒体解锁能力。
-- 整份配置的策略组、DNS 和资源组合不会因为规则更新而自动改变。要应用本仓库后续对模板结构的修改，需重新下载并应用配置。
+- 整份配置的策略组、DNS 和资源组合不会因为规则更新而自动改变。确需修改这些结构时，优先只修改相关配置段以保留设备设置，避免整份覆盖。
 
 仓库无需定时复制上游规则；Quantumult X 直接从上游订阅地址拉取规则内容。
 
@@ -79,6 +108,8 @@ Direct 按上游说明置于广告列表之前。Apple 直连是本模板的默�
 已检查配置结构、策略引用和公开文件中的个人凭据清理。未在用户设备上验证实际连接、节点质量、地区解锁或所有网站的分流结果。
 
 ## 来源
+
+- [Quantumult X 官方 URL Scheme](https://github.com/crossutility/Quantumult-X/blob/master/url-scheme.md)：add-resource 仅添加资源。
 
 - [blackmatrix7 / ios_rule_script](https://github.com/blackmatrix7/ios_rule_script)：分流资源。
 - [Quantumult X 官方配置示例](https://github.com/crossutility/Quantumult-X/blob/master/sample.conf)：配置格式。
