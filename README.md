@@ -1,6 +1,6 @@
 # quantumult-config
 
-Quantumult X 完整配置：国内直连、广告拦截、国外统一代理。保留“代理出口 / 自动选择”两个策略组，手动模式复用 Quan 内置的 proxy 节点选择。
+Quantumult X 完整配置：国内直连、广告拦截、明确匹配的国外规则统一代理、未匹配流量默认直连。保留“代理出口 / 自动选择”两个策略组，手动模式复用 Quan 内置的 proxy 节点选择。
 
 ## 已在使用：只更新规则，保留证书和节点
 
@@ -29,6 +29,20 @@ Quantumult X 完整配置：国内直连、广告拦截、国外统一代理。�
 
 策略组、DNS、节点及证书的结构性变更仍需单独操作；远程分流列表只负责规则，不会修改这些设置。
 
+## 已有配置：将最终兜底改为直连
+
+这项变更只需在手机本地修改一次；更新远程分流订阅不会替换本地 FINAL。
+
+在当前配置的文本编辑器中找到 `[filter_local]`，把原有的 `final, 代理出口`（或 `final, proxy`）替换成：
+
+```ini
+final, direct
+```
+
+保留一个 FINAL，放在该段普通本地规则之后；保存并使用规则分流模式。无需重新导入完整配置，也无需重新生成证书。“代理出口”继续选择 `proxy`，在主界面手动固定节点。
+
+未匹配域名将直连。如果某个国外服务无法访问，先看请求记录；确认命中 FINAL 且手动测试代理可解决后，在 `custom.list` 添加具体域名规则，例如 `host-suffix, example.com, 代理出口`（仅为格式示例）。刷新“自定义修正”即可生效，无需新增策略组。已命中国外规则的请求仍会走代理。
+
 ## 首次初始化配置下载
 
 [QuantumultX.conf 原始配置链接](https://raw.githubusercontent.com/easybrad/quantumult-config/main/QuantumultX.conf)
@@ -52,7 +66,7 @@ https://raw.githubusercontent.com/easybrad/quantumult-config/main/QuantumultX.co
 
 ## 手动与自动如何切换
 
-所有需要代理的规则和 FINAL 都指向“代理出口”：
+明确需要代理的规则指向“代理出口”；FINAL 默认 direct。日常使用选择 proxy 并手动固定节点，自动选择仅为可选功能：
 
 | 代理出口的选择 | 实际使用的节点 | 在哪里操作 |
 | --- | --- | --- |
@@ -85,7 +99,7 @@ https://raw.githubusercontent.com/easybrad/quantumult-config/main/QuantumultX.co
 | 6 | Apple | direct |
 | 7 | Global | 代理出口 |
 | 8 | ChinaMax | direct |
-| 最终兜底 | FINAL | 代理出口 |
+| 最终兜底 | FINAL | direct |
 
 ChinaMax 已包含 China、ChinaIPs、ChinaMedia 等；Global 已包含 Proxy；Advertising 已包含 Privacy、Hijacking 等。同一出口通常无需再重复引用这些子列表。
 
