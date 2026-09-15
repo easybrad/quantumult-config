@@ -1,5 +1,9 @@
 # quantumult-config
 
+## Clash Verge Rev（Mac）
+
+已提供[覆写脚本和安装说明](clash/README.md)：保留机场节点，手动固定代理出口，苹果服务可单独切换，默认 MATCH,DIRECT；规则集合独立更新。复制[脚本原始内容](https://raw.githubusercontent.com/easybrad/quantumult-config/main/clash/override.js)到全局扩展脚本。脚本本身是本地副本，不会随规则集合更新自动替换。
+
 Quantumult X 完整配置：国内直连、广告拦截、明确匹配的国外规则统一代理、未匹配流量默认直连。保留“代理出口 / 自动选择”两个策略组，手动模式复用 Quan 内置的 proxy 节点选择。
 
 ## 已在使用：只更新规则，保留证书和节点
