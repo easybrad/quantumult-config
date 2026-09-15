@@ -1,0 +1,5 @@
+# 与根目录 custom.list 的直连例外对应，修改时同步维护。
+payload:
+  - DOMAIN-SUFFIX,123ths.com
+  - DOMAIN-SUFFIX,10jqka.com.cn
+  - DOMAIN-SUFFIX,hexin.cn
