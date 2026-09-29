@@ -1,5 +1,17 @@
 # quantumult-config
 
+## Shadowrocket（小火箭）
+
+[Shadowrocket.conf 下载链接](https://raw.githubusercontent.com/easybrad/quantumult-config/main/Shadowrocket.conf)
+
+在“配置”页添加上述 URL，下载后选择使用；全局路由选择“配置”。主页保留自己的节点订阅，并手动选择节点。PROXY 使用主页选择的节点；苹果服务可选 DIRECT 或 PROXY，广告拦截可选 REJECT 或 DIRECT。最终 FINAL,DIRECT。
+
+本模板引用 blackmatrix7 的 Shadowrocket 专用规则；较大的合集按上游说明同时引用 DOMAIN-SET 和 RULE-SET，避免遗漏被拆分的域名。远程规则的更新由客户端管理，请检查更新时间、条目数和下载错误；这里不保证与 Quan / Clash 相同的 24 小时定时行为。
+
+自定义农行阻断及同花顺直连是内联规则，需要与根目录 custom.list 同步维护；更新上游规则不会修改这些内联例外。模板修改后需重新下载。下载使用前备份已有配置，尤其是个人 DNS、重写和证书设置。本模板没有证书和 HTTPS 解密内容，无需为分流生成证书。
+
+已核对上游规则链接并回读仓库文件，尚未在用户 Shadowrocket 客户端测试。
+
 ## Clash Verge Rev（Mac）
 
 已提供[覆写脚本和安装说明](clash/README.md)：保留机场节点，手动固定代理出口，苹果服务可单独切换，默认 MATCH,DIRECT；规则集合独立更新。复制[脚本原始内容](https://raw.githubusercontent.com/easybrad/quantumult-config/main/clash/override.js)到全局扩展脚本。脚本本身是本地副本，不会随规则集合更新自动替换。
